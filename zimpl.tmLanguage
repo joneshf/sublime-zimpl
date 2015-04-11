@@ -48,6 +48,41 @@
 		</dict>
 		<dict>
 			<key>begin</key>
+			<string>do</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>;</string>
+			<key>name</key>
+			<string>meta.statement.do.zimpl</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#check</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#do</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#print</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#common</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
 			<string>(def(bool|numb|s(et|trg)))\s+(\w+)</string>
 			<key>beginCaptures</key>
 			<dict>
@@ -152,6 +187,14 @@
 					<key>include</key>
 					<string>#common</string>
 				</dict>
+				<dict>
+					<key>include</key>
+					<string>#read</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#read-options</string>
+				</dict>
 			</array>
 		</dict>
 		<dict>
@@ -179,6 +222,50 @@
 				<dict>
 					<key>include</key>
 					<string>#assignment</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#common</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#read</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#read-options</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>(sos)\s+(\w+)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.zimpl</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>;</string>
+			<key>name</key>
+			<string>meta.statement.sos.zimpl</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#priority</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#sos-type</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -221,6 +308,47 @@
 	</array>
 	<key>repository</key>
 	<dict>
+		<key>argm</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>argm(ax|in)</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.zimpl</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>(:)</string>
+					<key>name</key>
+					<string>meta.expression.argm.zimpl</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>$self</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#in</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#index</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#tuple</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
 		<key>assignment</key>
 		<dict>
 			<key>patterns</key>
@@ -245,6 +373,18 @@
 				</dict>
 			</array>
 		</dict>
+		<key>check</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>check</string>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+			</array>
+		</dict>
 		<key>comments</key>
 		<dict>
 			<key>patterns</key>
@@ -261,6 +401,14 @@
 		<dict>
 			<key>patterns</key>
 			<array>
+				<dict>
+					<key>include</key>
+					<string>#forall</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#sum</string>
+				</dict>
 				<dict>
 					<key>include</key>
 					<string>#boolean</string>
@@ -289,6 +437,34 @@
 					<key>include</key>
 					<string>#tuple</string>
 				</dict>
+				<dict>
+					<key>include</key>
+					<string>#variant</string>
+				</dict>
+			</array>
+		</dict>
+		<key>do</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>do</string>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>else</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>else</string>
+					<key>name</key>
+					<string>keyword.control.zimpl</string>
+				</dict>
 			</array>
 		</dict>
 		<key>forall</key>
@@ -307,7 +483,15 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(\bdo|:)</string>
+					<string>(\b(do)|:)</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.zimpl</string>
+						</dict>
+					</dict>
 					<key>name</key>
 					<string>meta.expression.forall.zimpl</string>
 					<key>patterns</key>
@@ -327,6 +511,10 @@
 						<dict>
 							<key>include</key>
 							<string>#tuple</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#with</string>
 						</dict>
 					</array>
 				</dict>
@@ -395,6 +583,83 @@
 				</dict>
 			</array>
 		</dict>
+		<key>print</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>print</string>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>priority</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>priority\s+\d+</string>
+					<key>name</key>
+					<string>keyword.other.zimpl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>read</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>read</string>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.other.zimpl</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>as</string>
+					<key>name</key>
+					<string>meta.expression.read.zimpl</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#string</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>read-options</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>comment|match|use|skip</string>
+					<key>name</key>
+					<string>keyword.control.zimpl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>sos-type</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>type(1|2)</string>
+					<key>name</key>
+					<string>support.type.zimpl</string>
+				</dict>
+			</array>
+		</dict>
 		<key>std-lib</key>
 		<dict>
 			<key>patterns</key>
@@ -407,13 +672,19 @@
 				</dict>
 				<dict>
 					<key>match</key>
+					<string>vabs</string>
+					<key>name</key>
+					<string>support.function.extended.zimpl</string>
+				</dict>
+				<dict>
+					<key>match</key>
 					<string>abs|c(ard|eil)|exp|floor|l(ength|og|n)|m(ax|in|od)|ord|prod|r(andom|ound)|s(gn|qrt|um)</string>
 					<key>name</key>
 					<string>support.function.numeric.zimpl</string>
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>cross|in(dexset|ter)|p(owerset|roj)|s(ubsets|ymdiff)|union|without</string>
+					<string>cross|in(dexset|ter)|ord|p(owerset|roj)|s(ubsets|ymdiff)|union|without</string>
 					<key>name</key>
 					<string>support.function.set.zimpl</string>
 				</dict>
@@ -511,7 +782,23 @@
 							<key>include</key>
 							<string>#tuple</string>
 						</dict>
+						<dict>
+							<key>include</key>
+							<string>#with</string>
+						</dict>
 					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>then</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>then</string>
+					<key>name</key>
+					<string>keyword.control.zimpl</string>
 				</dict>
 			</array>
 		</dict>
@@ -561,6 +848,59 @@
 					<string>binary|integer|real</string>
 					<key>name</key>
 					<string>storage.type.zimpl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>variant</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>(v|)if</string>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.zimpl</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>end</string>
+					<key>name</key>
+					<string>entity.variant.zimpl</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>$self</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#then</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#else</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#common</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>with</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>with</string>
+					<key>name</key>
+					<string>keyword.control.zimpl</string>
 				</dict>
 			</array>
 		</dict>

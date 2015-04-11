@@ -1,5 +1,4 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
----
 name: ZIMPL
 scopeName: source.zimpl
 fileTypes: [zpl]
@@ -9,9 +8,9 @@ patterns:
 - name: meta.statement.constraint.zimpl
   begin: (subto)\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "2":
+    '2':
       name: entity.name.tag.zimpl
   end: ;
   patterns:
@@ -19,12 +18,24 @@ patterns:
   - include: '#sum'
   - include: '#common'
 
+- name: meta.statement.do.zimpl
+  begin: do
+  beginCaptures:
+    '0':
+      name: keyword.other.zimpl
+  end: ;
+  patterns:
+  - include: '#check'
+  - include: '#do'
+  - include: '#print'
+  - include: '#common'
+
 - name: meta.statement.function.zimpl
   begin: (def(bool|numb|s(et|trg)))\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "4":
+    '4':
       name: entity.name.function.zimpl
   end: ;
   patterns:
@@ -36,9 +47,9 @@ patterns:
 - name: meta.statement.objective.zimpl
   begin: (m(ax|in)imize)\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "3":
+    '3':
       name: entity.name.tag.zimpl
   end: ;
   patterns:
@@ -49,33 +60,50 @@ patterns:
 - name: meta.statement.param.zimpl
   begin: (param)\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "2":
+    '2':
       name: constant.other.zimpl
   end: ;
   patterns:
   - include: '#assignment'
   - include: '#common'
+  - include: '#read'
+  - include: '#read-options'
 
 - name: meta.statement.set.zimpl
   begin: (set)\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "2":
+    '2':
       name: storage.type.zimpl
   end: ;
   patterns:
   - include: '#assignment'
   - include: '#common'
+  - include: '#read'
+  - include: '#read-options'
+
+- name: meta.statement.sos.zimpl
+  begin: (sos)\s+(\w+)
+  beginCaptures:
+    '1':
+      name: keyword.other.zimpl
+    '2':
+      name: storage.type.zimpl
+  end: ;
+  patterns:
+  - include: '#priority'
+  - include: '#sos-type'
+  - include: '#common'
 
 - name: meta.statement.var.zimpl
   begin: (var)\s+(\w+)
   beginCaptures:
-    "1":
+    '1':
       name: keyword.other.zimpl
-    "2":
+    '2':
       name: variable.parameter.zimpl
   end: ;
   patterns:
@@ -83,6 +111,20 @@ patterns:
   - include: '#var-types'
 
 repository:
+  argm:
+    patterns:
+    - name: meta.expression.argm.zimpl
+      begin: argm(ax|in)
+      beginCaptures:
+        '0':
+          name: keyword.control.zimpl
+      end: (:)
+      patterns:
+      - include: $self
+      - include: '#in'
+      - include: '#index'
+      - include: '#tuple'
+
   assignment:
     patterns:
     - name: keyword.operator.zimpl
@@ -93,6 +135,11 @@ repository:
     - name: constant.language.zimpl
       match: (fals|tru)e
 
+  check:
+    patterns:
+    - name: keyword.other.zimpl
+      match: check
+
   comments:
     patterns:
     - name: comment.line.number-sign.zimpl
@@ -100,6 +147,8 @@ repository:
 
   common:
     patterns:
+    - include: '#forall'
+    - include: '#sum'
     - include: '#boolean'
     - include: '#comments'
     - include: '#index'
@@ -107,20 +156,35 @@ repository:
     - include: '#string'
     - include: '#std-lib'
     - include: '#tuple'
+    - include: '#variant'
+
+  do:
+    patterns:
+    - name: keyword.other.zimpl
+      match: do
+
+  else:
+    patterns:
+    - name: keyword.control.zimpl
+      match: else
 
   forall:
     patterns:
     - name: meta.expression.forall.zimpl
       begin: forall
       beginCaptures:
-        "0":
+        '0':
           name: keyword.control.zimpl
-      end: (\bdo|:)
+      end: (\b(do)|:)
+      endCaptures:
+        '2':
+          name: keyword.control.zimpl
       patterns:
       - include: $self
       - include: '#in'
       - include: '#index'
       - include: '#tuple'
+      - include: '#with'
 
   in:
     patterns:
@@ -133,7 +197,7 @@ repository:
       begin: (\[)\s*
       end: \s*(\])
       captures:
-        "1":
+        '1':
           name: keyword.operator.zimpl
       patterns:
       - include: '#numbers'
@@ -146,14 +210,47 @@ repository:
     - name: constant.numeric.zimpl
       match: \d+
 
+  print:
+    patterns:
+    - name: keyword.other.zimpl
+      match: print
+
+  priority:
+    patterns:
+    - name: keyword.other.zimpl
+      match: priority\s+\d+
+
+  read:
+    patterns:
+    - name: meta.expression.read.zimpl
+      begin: read
+      end: as
+      captures:
+        '0':
+          name: keyword.other.zimpl
+      patterns:
+      - include: '#string'
+
+  read-options:
+    patterns:
+    - name: keyword.control.zimpl
+      match: comment|match|use|skip
+
+  sos-type:
+    patterns:
+    - name: support.type.zimpl
+      match: type(1|2)
+
   std-lib:
     patterns:
     - name: support.function.boolean.zimpl
       match: and|not|(x|)or|
+    - name: support.function.extended.zimpl
+      match: vabs
     - name: support.function.numeric.zimpl
       match: abs|c(ard|eil)|exp|floor|l(ength|og|n)|m(ax|in|od)|ord|prod|r(andom|ound)|s(gn|qrt|um)
     - name: support.function.set.zimpl
-      match: cross|in(dexset|ter)|p(owerset|roj)|s(ubsets|ymdiff)|union|without
+      match: cross|in(dexset|ter)|ord|p(owerset|roj)|s(ubsets|ymdiff)|union|without
     - name: support.function.string.zimpl
       match: substr
 
@@ -162,11 +259,11 @@ repository:
     - name: string.quoted.double.zimpl
       begin: '"'
       beginCaptures:
-        "0":
+        '0':
           name: punctuation.definition.string.begin.zimpl
       end: '"'
       endCaptures:
-        "0":
+        '0':
           name: punctuation.definition.string.begin.zimpl
       patterns:
       - include: '#string-escape'
@@ -181,7 +278,7 @@ repository:
     - name: meta.expression.sum.zimpl
       begin: sum
       beginCaptures:
-        "0":
+        '0':
           name: keyword.control.zimpl
       end: (\bdo|:)
       patterns:
@@ -189,6 +286,12 @@ repository:
       - include: '#in'
       - include: '#index'
       - include: '#tuple'
+      - include: '#with'
+
+  then:
+    patterns:
+    - name: keyword.control.zimpl
+      match: then
 
   tuple:
     patterns:
@@ -196,7 +299,7 @@ repository:
       begin: (<)\b
       end: \b(>)
       captures:
-        "1":
+        '1':
           name: keyword.operator.zimpl
       patterns:
       - include: $self
@@ -207,3 +310,22 @@ repository:
     patterns:
     - name: storage.type.zimpl
       match: binary|integer|real
+
+  variant:
+    patterns:
+    - name: entity.variant.zimpl
+      begin: (v|)if
+      end: end
+      captures:
+        '0':
+          name: keyword.control.zimpl
+      patterns:
+      - include: $self
+      - include: '#then'
+      - include: '#else'
+      - include: '#common'
+
+  with:
+    patterns:
+    - name: keyword.control.zimpl
+      match: with
