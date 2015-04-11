@@ -1,0 +1,209 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: ZIMPL
+scopeName: source.zimpl
+fileTypes: [zpl]
+uuid: e0f40eeb-6c26-430c-bd04-c3272ad89d60
+
+patterns:
+- name: meta.statement.constraint.zimpl
+  begin: (subto)\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "2":
+      name: entity.name.tag.zimpl
+  end: ;
+  patterns:
+  - include: '#forall'
+  - include: '#sum'
+  - include: '#common'
+
+- name: meta.statement.function.zimpl
+  begin: (def(bool|numb|s(et|trg)))\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "4":
+      name: entity.name.function.zimpl
+  end: ;
+  patterns:
+  - include: '#assignment'
+  - include: '#forall'
+  - include: '#sum'
+  - include: '#common'
+
+- name: meta.statement.objective.zimpl
+  begin: (m(ax|in)imize)\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "3":
+      name: entity.name.tag.zimpl
+  end: ;
+  patterns:
+  - include: '#forall'
+  - include: '#sum'
+  - include: '#common'
+
+- name: meta.statement.param.zimpl
+  begin: (param)\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "2":
+      name: constant.other.zimpl
+  end: ;
+  patterns:
+  - include: '#assignment'
+  - include: '#common'
+
+- name: meta.statement.set.zimpl
+  begin: (set)\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "2":
+      name: storage.type.zimpl
+  end: ;
+  patterns:
+  - include: '#assignment'
+  - include: '#common'
+
+- name: meta.statement.var.zimpl
+  begin: (var)\s+(\w+)
+  beginCaptures:
+    "1":
+      name: keyword.other.zimpl
+    "2":
+      name: variable.parameter.zimpl
+  end: ;
+  patterns:
+  - include: '#index'
+  - include: '#var-types'
+
+repository:
+  assignment:
+    patterns:
+    - name: keyword.operator.zimpl
+      match: :=
+
+  boolean:
+    patterns:
+    - name: constant.language.zimpl
+      match: (fals|tru)e
+
+  comments:
+    patterns:
+    - name: comment.line.number-sign.zimpl
+      match: '#.*'
+
+  common:
+    patterns:
+    - include: '#boolean'
+    - include: '#comments'
+    - include: '#index'
+    - include: '#numbers'
+    - include: '#string'
+    - include: '#std-lib'
+    - include: '#tuple'
+
+  forall:
+    patterns:
+    - name: meta.expression.forall.zimpl
+      begin: forall
+      beginCaptures:
+        "0":
+          name: keyword.control.zimpl
+      end: (\bdo|:)
+      patterns:
+      - include: $self
+      - include: '#in'
+      - include: '#index'
+      - include: '#tuple'
+
+  in:
+    patterns:
+    - name: keyword.control.zimpl
+      match: in
+
+  index:
+    patterns:
+    - name: entity.index.zimpl
+      begin: (\[)\s*
+      end: \s*(\])
+      captures:
+        "1":
+          name: keyword.operator.zimpl
+      patterns:
+      - include: '#numbers'
+      - include: '#string'
+      - name: entity.other.attribute-name.zimpl
+        match: \w+
+
+  numbers:
+    patterns:
+    - name: constant.numeric.zimpl
+      match: \d+
+
+  std-lib:
+    patterns:
+    - name: support.function.boolean.zimpl
+      match: and|not|(x|)or|
+    - name: support.function.numeric.zimpl
+      match: abs|c(ard|eil)|exp|floor|l(ength|og|n)|m(ax|in|od)|ord|prod|r(andom|ound)|s(gn|qrt|um)
+    - name: support.function.set.zimpl
+      match: cross|in(dexset|ter)|p(owerset|roj)|s(ubsets|ymdiff)|union|without
+    - name: support.function.string.zimpl
+      match: substr
+
+  string:
+    patterns:
+    - name: string.quoted.double.zimpl
+      begin: '"'
+      beginCaptures:
+        "0":
+          name: punctuation.definition.string.begin.zimpl
+      end: '"'
+      endCaptures:
+        "0":
+          name: punctuation.definition.string.begin.zimpl
+      patterns:
+      - include: '#string-escape'
+
+  string-escape:
+    patterns:
+    - name: constant.character.escape.zimpl
+      match: \\('|\"|\\|/|b|f|n|r|t|v|0)
+
+  sum:
+    patterns:
+    - name: meta.expression.sum.zimpl
+      begin: sum
+      beginCaptures:
+        "0":
+          name: keyword.control.zimpl
+      end: (\bdo|:)
+      patterns:
+      - include: $self
+      - include: '#in'
+      - include: '#index'
+      - include: '#tuple'
+
+  tuple:
+    patterns:
+    - name: entity.tuple.zimpl
+      begin: (<)\b
+      end: \b(>)
+      captures:
+        "1":
+          name: keyword.operator.zimpl
+      patterns:
+      - include: $self
+      - include: '#numbers'
+      - include: '#string'
+
+  var-types:
+    patterns:
+    - name: storage.type.zimpl
+      match: binary|integer|real
